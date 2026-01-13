@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App -->
+    <string name="app_name">WeatherNow</string>
+
+    <!-- Main screen -->
+    <string name="cities_title">WeatherNow</string>
+    <string name="details">Details</string>
+    <string name="empty_list">No cities yet. Tap + to add.</string>
+
+    <!-- Add city dialog (FIX for build) -->
+    <string name="city_name">City name</string>
+    <string name="add_to_favorites">Add to favorites</string>
+    <string name="add_city_hint">Tip: type a city like Warsaw</string>
+    <string name="add_city_title">Add city</string>
+    <string name="add_city">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="error_enter_city">Please enter a city name</string>
+
+    <!-- Forecast screen -->
+    <string name="next_7_days">Next 7 days</string>
+    <string name="source_open_meteo">Data from Open-Meteo • 7 days</string>
+
+    <string name="weather_icon">Weather icon</string>
+    <string name="empty_cities">Список городов пуст. Нажми + чтобы добавить</string>
+
+
+    <string name="no_coordinates">Нет координат для этого города</string>
+    <string name="loading">Загрузка…</string>
+    <string name="error">Ошибка</string>
+    <string name="network_error">Ошибка сети</string>
+    <string name="data_source">Источник данных</string>
+
+    <string name="add">Добавить</string>
+    <string name="error_city_empty">Введите город</string>
+
+
+
+
+
+</resources>
