@@ -1,121 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_sky">
 
+    <!-- ✅ AppBarLayout фиксит наложение ScrollView на Toolbar -->
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbarForecast"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorSurface"
-            android:title=""
-            app:titleTextColor="?attr/colorOnSurface" />
+            android:background="@android:color/transparent"
+            android:paddingEnd="12dp"
+            app:layout_scrollFlags="scroll|enterAlways">
 
+            <!-- Город по центру -->
+            <TextView
+                android:id="@+id/tvToolbarCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="City"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:clickable="false"
+                android:focusable="false"/>
+
+            <!-- Switch °C/°F справа -->
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/swUnits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:textOff="°C"
+                android:textOn="°F"
+                android:showText="true"/>
+
+        </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <!-- ✅ Теперь ScrollView НЕ перекрывает Toolbar -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="16dp"
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/screen_padding">
+            android:orientation="vertical">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardHero"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="@dimen/card_radius"
-                app:cardElevation="@dimen/card_elevation"
-                app:cardUseCompatPadding="true">
+            <!-- HERO ICON -->
+            <ImageView
+                android:id="@+id/ivHeroIcon"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/weather_icon"
+                android:tint="@color/text_primary"/>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/space_l">
-
-                    <TextView
-                        android:id="@+id/tvCityTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="City"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/ivHeroIcon"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <!-- ✅ Иконка погоды (теперь будет меняться программно) -->
-                    <ImageView
-                        android:id="@+id/ivHeroIcon"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:contentDescription="@string/weather_icon"
-                        android:src="@drawable/ic_weather_cloud"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvBigTemp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="--°"
-                        android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
-                        android:layout_marginTop="@dimen/space_m"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvCityTitle" />
-
-                    <TextView
-                        android:id="@+id/tvConditionBig"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="—"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                        android:layout_marginTop="@dimen/space_xs"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvBigTemp" />
-
-                    <TextView
-                        android:id="@+id/tvExtra"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="?attr/colorOnSurface"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_marginTop="@dimen/space_m"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvConditionBig" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
+            <!-- TEMP -->
             <TextView
+                android:id="@+id/tvBigTemp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-12°"
+                android:textColor="@color/text_primary"
+                android:textSize="48sp"
+                android:textStyle="bold"/>
+
+            <!-- CONDITION -->
+            <TextView
+                android:id="@+id/tvConditionBig"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cloudy"
+                android:textColor="@color/text_secondary"/>
+
+            <!-- HOURLY -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Hourly"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHourly"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/next_7_days"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:layout_marginTop="@dimen/space_xl"
-                android:layout_marginBottom="@dimen/space_m" />
+                android:layout_marginTop="12dp"/>
+
+            <!-- NEXT 7 DAYS -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Next 7 days"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvDays"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                android:layout_marginTop="12dp"
+                android:nestedScrollingEnabled="false"/>
+
+            <TextView
+                android:id="@+id/tvExtra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Источник данных"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"/>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

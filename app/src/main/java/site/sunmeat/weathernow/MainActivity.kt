@@ -2,11 +2,13 @@ package site.sunmeat.weathernow
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,14 +22,6 @@ import site.sunmeat.weathernow.network.ApiClient
 import site.sunmeat.weathernow.network.dto.GeoResult
 import site.sunmeat.weathernow.util.WeatherCodeMapper
 
-/**
- * MainActivity — список городов.
- *
- * Что важно для защиты:
- * - При запуске экрана автоматически подтягиваем погоду для всех городов (Retrofit + корутины).
- * - Запросы идут асинхронно, UI не блокируется.
- * - Карточки обновляются по мере прихода ответов.
- */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -74,17 +68,23 @@ class MainActivity : AppCompatActivity() {
             onDetailsClick = { openForecast(it) }
         )
 
+        // ✅ ВАЖНО: LayoutManager (иначе список часто "пустой")
+        binding.rvCities.layoutManager = LinearLayoutManager(this)
         binding.rvCities.adapter = adapter
+        binding.rvCities.setHasFixedSize(true)
+
         refreshList()
 
-        binding.fabAdd.setOnClickListener { showAddCityDialog() }
+        binding.btnAdd.setOnClickListener {
+            showAddCityDialog()
+        }
 
-        // ✅ Главный фикс: сразу подтягиваем погоду для всех городов
         refreshAllCitiesWeather()
     }
 
     private fun refreshList() {
-        adapter.submit(cities)
+        Log.d("MainActivity", "refreshList: cities=${cities.size}")
+        adapter.submit(cities.toList()) // ✅ передаём копию, чтобы diff/submit точно сработал
         binding.tvEmpty.visibility = if (cities.isEmpty()) View.VISIBLE else View.GONE
     }
 
@@ -104,13 +104,8 @@ class MainActivity : AppCompatActivity() {
         forecastLauncher.launch(intent)
     }
 
-    /**
-     * ✅ Обновление погоды на главном экране (без захода в Details).
-     * Запросы делаем в фоне, UI не блокируем.
-     */
     private fun refreshAllCitiesWeather() {
         CoroutineScope(Dispatchers.IO).launch {
-            // Ограничим параллельность простым батчем: по 2 запроса за раз
             val batchSize = 2
             val indices = cities.indices.toList()
 
@@ -203,13 +198,13 @@ class MainActivity : AppCompatActivity() {
                                 longitude = result.longitude
                             )
 
-                            cities.add(city)
-                            refreshList()
+                            val exists = cities.any { it.latitude == city.latitude && it.longitude == city.longitude }
+                            if (!exists) {
+                                cities.add(city)
+                                refreshList()
+                                refreshAllCitiesWeather()
+                            }
 
-                            // ✅ сразу подтягиваем погоду для нового города
-                            refreshAllCitiesWeather()
-
-                            // и открываем Forecast (по желанию оставляем, это удобно)
                             openForecast(city)
                         }
                     }

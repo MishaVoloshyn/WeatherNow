@@ -3,27 +3,30 @@ package site.sunmeat.weathernow.network
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-/**
- * Retrofit клиент.
- * Как объяснить преподу:
- * - Отдельный класс для создания Retrofit, чтобы не дублировать код.
- */
 object ApiClient {
 
-    private val retrofitGeo: Retrofit by lazy {
+    private const val WEATHER_BASE_URL = "https://api.open-meteo.com/"
+    private const val GEO_BASE_URL = "https://geocoding-api.open-meteo.com/"
+
+    private val weatherRetrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("https://geocoding-api.open-meteo.com/")
+            .baseUrl(WEATHER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    private val retrofitWeather: Retrofit by lazy {
+    private val geoRetrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("https://api.open-meteo.com/")
+            .baseUrl(GEO_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    val geoApi: GeoApi by lazy { retrofitGeo.create(GeoApi::class.java) }
-    val weatherApi: WeatherApi by lazy { retrofitWeather.create(WeatherApi::class.java) }
+    val weatherApi: WeatherApi by lazy {
+        weatherRetrofit.create(WeatherApi::class.java)
+    }
+
+    val geoApi: GeoApi by lazy {
+        geoRetrofit.create(GeoApi::class.java)
+    }
 }

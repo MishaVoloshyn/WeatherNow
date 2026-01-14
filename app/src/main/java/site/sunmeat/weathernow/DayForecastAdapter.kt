@@ -16,11 +16,17 @@ class DayForecastAdapter : RecyclerView.Adapter<DayForecastAdapter.VH>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val binding = ItemDayForecastBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemDayForecastBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return VH(binding)
     }
 
-    override fun onBindViewHolder(holder: VH, position: Int) = holder.bind(items[position])
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        holder.bind(items[position])
+    }
 
     override fun getItemCount(): Int = items.size
 

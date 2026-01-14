@@ -1,27 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Light scheme -->
-    <color name="md_theme_light_primary">#6750A4</color>
-    <color name="md_theme_light_onPrimary">#FFFFFF</color>
-    <color name="md_theme_light_primaryContainer">#EADDFF</color>
-    <color name="md_theme_light_onPrimaryContainer">#21005D</color>
 
-    <color name="md_theme_light_secondary">#625B71</color>
-    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <!-- Base -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 
-    <color name="md_theme_light_background">#FFFBFE</color>
-    <color name="md_theme_light_surface">#FFFBFE</color>
-    <color name="md_theme_light_onSurface">#1C1B1F</color>
+    <!-- App background -->
+    <color name="sky_top">#0F2027</color>
+    <color name="sky_bottom">#203A43</color>
 
-    <!-- Dark scheme -->
-    <color name="md_theme_dark_primary">#D0BCFF</color>
-    <color name="md_theme_dark_onPrimary">#381E72</color>
-    <color name="md_theme_dark_primaryContainer">#4F378B</color>
-    <color name="md_theme_dark_onPrimaryContainer">#EADDFF</color>
+    <!-- Cards -->
+    <color name="card_bg">#5A6A75</color>
+    <color name="card_stroke">#80FFFFFF</color>
 
-    <color name="md_theme_dark_secondary">#CCC2DC</color>
-    <color name="md_theme_dark_onSecondary">#332D41</color>
+    <!-- Glass -->
+    <color name="glass_fill">#4DFFFFFF</color>
+    <color name="glass_stroke">#66FFFFFF</color>
 
-    <color name="md_theme_dark_background">#1C1B1F</color>
-    <color name="md_theme_dark_surface">#1C1B1F</color>
-    <color name="md_theme_dark_onSurface">#E6E1E5</color>
+    <!-- Text -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#CCFFFFFF</color>
+
+    <!-- Buttons -->
+    <color name="button_bg">#33FFFFFF</color>
+    <color name="button_stroke">#66FFFFFF</color>
+
+    <!-- Popup -->
+    <color name="popup_bg">#2E3B44</color>
+    <color name="popup_stroke">#66FFFFFF</color>
+
+    <!-- Material (чтобы gradle не орал) -->
+    <color name="wn_primary">#0A84FF</color>
+    <color name="wn_primary_variant">#0066CC</color>
+    <color name="wn_on_primary">#FFFFFF</color>
+    <color name="wn_secondary">#5E5CE6</color>
+    <color name="wn_on_secondary">#FFFFFF</color>
+    <color name="wn_surface">#2C2C2E</color>
+    <color name="wn_on_surface">#FFFFFF</color>
+
 </resources>

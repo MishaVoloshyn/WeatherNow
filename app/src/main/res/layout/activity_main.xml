@@ -1,60 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="@drawable/bg_sky">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:title="@string/cities_title"
+        android:titleTextColor="@color/text_primary"
+        app:menu="@menu/main_menu" />
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorSurface"
-            android:title="@string/app_name"
-            app:titleTextColor="?attr/colorOnSurface" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/screen_padding"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <TextView
-            android:id="@+id/tvEmpty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/empty_cities"
-            android:gravity="center"
-            android:padding="@dimen/space_l"
-            android:textColor="?attr/colorOnSurface"
-            android:visibility="gone" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCities"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="96dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-    </LinearLayout>
-
-    <!-- ✅ FAB снизу слева: делается через android:layout_gravity -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAdd"
+    <!-- Empty state -->
+    <TextView
+        android:id="@+id/tvEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/empty_list"
+        android:textColor="@color/text_primary"
+        android:alpha="0.9"
+        android:layout_marginTop="20dp"
+        app:layout_anchor="@id/toolbar"
+        app:layout_anchorGravity="bottom|center_horizontal" />
+
+    <!-- Cities list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCities"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="70dp"
+        android:paddingBottom="120dp" />
+
+    <!-- FAB: Add city -->
+    <ImageButton
+        android:id="@+id/btnAdd"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_gravity="bottom|start"
-        android:layout_margin="@dimen/space_l"
-        android:contentDescription="@string/add_city"
-        app:srcCompat="@drawable/ic_add" />
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_fab"
+        android:src="@drawable/ic_add"
+        android:tint="@android:color/white"
+        android:elevation="8dp"
+        android:contentDescription="@string/add_city" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

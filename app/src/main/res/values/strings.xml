@@ -9,7 +9,7 @@
     <string name="details">Details</string>
     <string name="empty_list">No cities yet. Tap + to add.</string>
 
-    <!-- Add city dialog (FIX for build) -->
+    <!-- Add city dialog -->
     <string name="city_name">City name</string>
     <string name="add_to_favorites">Add to favorites</string>
     <string name="add_city_hint">Tip: type a city like Warsaw</string>
@@ -25,7 +25,6 @@
     <string name="weather_icon">Weather icon</string>
     <string name="empty_cities">Список городов пуст. Нажми + чтобы добавить</string>
 
-
     <string name="no_coordinates">Нет координат для этого города</string>
     <string name="loading">Загрузка…</string>
     <string name="error">Ошибка</string>
@@ -35,8 +34,10 @@
     <string name="add">Добавить</string>
     <string name="error_city_empty">Введите город</string>
 
+    <!-- Theme меню -->
+    <string name="theme_system">Тема: как в системе</string>
+    <string name="theme_light">Тема: светлая</string>
+    <string name="theme_dark">Тема: тёмная</string>
 
-
-
-
+    <string name="menu_theme_title">Theme</string>
 </resources>

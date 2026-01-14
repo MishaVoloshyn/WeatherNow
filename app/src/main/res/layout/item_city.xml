@@ -1,79 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/space_m"
-    app:cardCornerRadius="@dimen/card_radius"
-    app:cardElevation="@dimen/card_elevation"
-    app:cardUseCompatPadding="true">
+    android:padding="@dimen/space_m">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cardRoot"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="140dp"
+        android:background="@drawable/bg_glass_card"
         android:padding="@dimen/space_l">
 
+        <!-- Weather icon -->
         <ImageView
             android:id="@+id/ivIcon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:contentDescription="@string/weather_icon"
             android:src="@drawable/ic_weather_cloud"
+            app:tint="@color/text_primary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- City name -->
         <TextView
             android:id="@+id/tvCity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_m"
-            android:text="Kyiv"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:layout_marginStart="@dimen/space_s"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/ivIcon"
             app:layout_constraintTop_toTopOf="@id/ivIcon"
             app:layout_constraintEnd_toStartOf="@id/tvTemp" />
 
+        <!-- Condition -->
         <TextView
             android:id="@+id/tvCondition"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_m"
-            android:text="Cloudy"
-            android:textColor="?attr/colorOnSurface"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:layout_marginStart="@dimen/space_s"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
             app:layout_constraintStart_toEndOf="@id/ivIcon"
             app:layout_constraintTop_toBottomOf="@id/tvCity"
             app:layout_constraintEnd_toStartOf="@id/tvTemp" />
 
+        <!-- Temperature -->
         <TextView
             android:id="@+id/tvTemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="22°"
-            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textColor="@color/text_primary"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Min / Max -->
         <TextView
             android:id="@+id/tvMinMax"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="H:24°  L:14°"
-            android:textColor="?attr/colorOnSurface"
-            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
             app:layout_constraintTop_toBottomOf="@id/tvTemp"
-            android:layout_marginTop="@dimen/space_xs" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- DETAILS BUTTON -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDetails"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="34dp"
             android:text="@string/details"
-            app:cornerRadius="@dimen/button_radius"
+            android:textSize="12sp"
+            android:textAllCaps="false"
+            android:textColor="@color/text_primary"
+            android:paddingHorizontal="14dp"
+            app:cornerRadius="16dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/card_stroke"
+            app:backgroundTint="@android:color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvMinMax"
-            android:layout_marginTop="@dimen/space_m" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
