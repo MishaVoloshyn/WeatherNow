@@ -2,10 +2,9 @@ package site.sunmeat.weathernow
 
 data class CityUi(
     val name: String,
-    val condition: String,
-    val temp: String,
-    val minMax: String,
-    val latitude: Double?,
-    val longitude: Double?,
-    val isFavorite: Boolean = false
+    val lat: Double,
+    val lon: Double,
+    val temp: String = "--°",
+    val condition: String = "—",
+    val minMax: String = "H:--°  L:--°"
 )

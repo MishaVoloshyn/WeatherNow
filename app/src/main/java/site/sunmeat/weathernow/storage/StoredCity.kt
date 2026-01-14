@@ -3,6 +3,5 @@ package site.sunmeat.weathernow.storage
 data class StoredCity(
     val name: String,
     val lat: Double,
-    val lon: Double,
-    val favorite: Boolean = false
+    val lon: Double
 )

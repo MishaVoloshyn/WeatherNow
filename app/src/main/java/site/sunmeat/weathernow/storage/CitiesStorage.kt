@@ -1,73 +1,69 @@
 package site.sunmeat.weathernow.storage
 
 import android.content.Context
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import org.json.JSONArray
 import org.json.JSONObject
-import site.sunmeat.weathernow.CityUi
 
-object CitiesStorage {
+class CitiesStorage(context: Context) {
 
-    private const val STORE_NAME = "cities_store"
-    private val Context.dataStore by preferencesDataStore(name = STORE_NAME)
+    private val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
-    private val KEY_CITIES = stringPreferencesKey("cities_json")
-
-    fun observeCities(context: Context): Flow<List<CityUi>> {
-        return context.dataStore.data.map { prefs ->
-            val json = prefs[KEY_CITIES]
-            if (json.isNullOrBlank()) emptyList() else decode(json)
+    fun getCities(): MutableList<StoredCity> {
+        val json = prefs.getString(KEY_CITIES, null) ?: return mutableListOf()
+        return try {
+            val arr = JSONArray(json)
+            val list = mutableListOf<StoredCity>()
+            for (i in 0 until arr.length()) {
+                val o = arr.getJSONObject(i)
+                list.add(
+                    StoredCity(
+                        name = o.getString("name"),
+                        lat = o.getDouble("lat"),
+                        lon = o.getDouble("lon")
+                    )
+                )
+            }
+            list
+        } catch (_: Exception) {
+            mutableListOf()
         }
     }
 
-    suspend fun saveCities(context: Context, cities: List<CityUi>) {
-        val json = encode(cities)
-        context.dataStore.edit { prefs ->
-            prefs[KEY_CITIES] = json
-        }
-    }
-
-    private fun encode(list: List<CityUi>): String {
+    fun saveCities(cities: List<StoredCity>) {
         val arr = JSONArray()
-        list.forEach { c ->
+        for (c in cities) {
             val o = JSONObject()
             o.put("name", c.name)
-            o.put("lat", c.latitude ?: JSONObject.NULL)
-            o.put("lon", c.longitude ?: JSONObject.NULL)
-            // на будущее оставим возможность хранить фаворит
-            o.put("fav", false)
+            o.put("lat", c.lat)
+            o.put("lon", c.lon)
             arr.put(o)
         }
-        return arr.toString()
+        prefs.edit().putString(KEY_CITIES, arr.toString()).apply()
     }
 
-    private fun decode(json: String): List<CityUi> {
-        val arr = JSONArray(json)
-        val result = ArrayList<CityUi>(arr.length())
-
-        for (i in 0 until arr.length()) {
-            val o = arr.getJSONObject(i)
-            val name = o.optString("name", "City")
-
-            val lat = if (o.isNull("lat")) null else o.optDouble("lat")
-            val lon = if (o.isNull("lon")) null else o.optDouble("lon")
-
-            // при старте — плейсхолдеры, погоду подтянем отдельным запросом
-            result.add(
-                CityUi(
-                    name = name,
-                    condition = "—",
-                    temp = "--°",
-                    minMax = "H:--°  L:--°",
-                    latitude = lat,
-                    longitude = lon
-                )
-            )
+    fun addCity(city: StoredCity) {
+        val cities = getCities()
+        val exists = cities.any { it.name.equals(city.name, ignoreCase = true) }
+        if (!exists) {
+            cities.add(city)
+            saveCities(cities)
         }
-        return result
+    }
+
+    /** ✅ Удаление по имени (без учета регистра) */
+    fun removeCityByName(name: String) {
+        val cities = getCities()
+        val newList = cities.filterNot { it.name.equals(name, ignoreCase = true) }
+        saveCities(newList)
+    }
+
+    fun ensureDefaultsIfEmpty(defaults: List<StoredCity>) {
+        val current = getCities()
+        if (current.isEmpty()) saveCities(defaults)
+    }
+
+    companion object {
+        private const val PREFS = "prefs_cities"
+        private const val KEY_CITIES = "cities_json"
     }
 }

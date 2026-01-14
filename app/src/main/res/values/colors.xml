@@ -1,41 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base -->
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
+    <!-- =========================
+         iOS-like dark palette
+         ========================= -->
+    <color name="ios_bg_top">#0B1418</color>
+    <color name="ios_bg_mid">#0E1B20</color>
+    <color name="ios_bg_bottom">#0A1216</color>
 
-    <!-- App background -->
-    <color name="sky_top">#0F2027</color>
-    <color name="sky_bottom">#203A43</color>
+    <color name="card_fill">#2A3A41</color>
+    <color name="card_stroke">#33FFFFFF</color>
 
-    <!-- Cards -->
-    <color name="card_bg">#5A6A75</color>
-    <color name="card_stroke">#80FFFFFF</color>
+    <color name="text_primary">#F5F7FA</color>
+    <color name="text_secondary">#B8C2C7</color>
 
-    <!-- Glass -->
-    <color name="glass_fill">#4DFFFFFF</color>
-    <color name="glass_stroke">#66FFFFFF</color>
+    <color name="accent_ios">#6C7BFF</color>
 
-    <!-- Text -->
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#CCFFFFFF</color>
+    <!-- =========================
+         Compatibility colors
+         (чтобы не падала сборка)
+         ========================= -->
 
-    <!-- Buttons -->
-    <color name="button_bg">#33FFFFFF</color>
-    <color name="button_stroke">#66FFFFFF</color>
+    <!-- Старый фон неба -->
+    <color name="sky_top">@color/ios_bg_top</color>
+    <color name="sky_bottom">@color/ios_bg_bottom</color>
 
-    <!-- Popup -->
-    <color name="popup_bg">#2E3B44</color>
-    <color name="popup_stroke">#66FFFFFF</color>
+    <!-- Фоны карточек/элементов -->
+    <color name="card_bg">@color/card_fill</color>
 
-    <!-- Material (чтобы gradle не орал) -->
-    <color name="wn_primary">#0A84FF</color>
-    <color name="wn_primary_variant">#0066CC</color>
-    <color name="wn_on_primary">#FFFFFF</color>
-    <color name="wn_secondary">#5E5CE6</color>
-    <color name="wn_on_secondary">#FFFFFF</color>
-    <color name="wn_surface">#2C2C2E</color>
-    <color name="wn_on_surface">#FFFFFF</color>
+    <!-- Popup menu -->
+    <color name="popup_bg">#24353C</color>
+    <color name="popup_stroke">#33FFFFFF</color>
+
+    <!-- Доп (если где-то используются) -->
+    <color name="white_55">#55FFFFFF</color>
 
 </resources>

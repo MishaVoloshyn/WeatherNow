@@ -4,50 +4,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_sky">
+    android:background="@drawable/bg_ios_sky">
 
-    <!-- Toolbar -->
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbarMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:background="@android:color/transparent"
-        android:title="@string/cities_title"
-        android:titleTextColor="@color/text_primary"
-        app:menu="@menu/main_menu" />
+        android:title="WeatherNow"
+        android:titleTextColor="@color/text_primary" />
 
-    <!-- Empty state -->
-    <TextView
-        android:id="@+id/tvEmpty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/empty_list"
-        android:textColor="@color/text_primary"
-        android:alpha="0.9"
-        android:layout_marginTop="20dp"
-        app:layout_anchor="@id/toolbar"
-        app:layout_anchorGravity="bottom|center_horizontal" />
-
-    <!-- Cities list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCities"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="96dp"
         android:clipToPadding="false"
-        android:paddingTop="70dp"
-        android:paddingBottom="120dp" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <!-- FAB: Add city -->
-    <ImageButton
-        android:id="@+id/btnAdd"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|start"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
         android:layout_margin="20dp"
-        android:background="@drawable/bg_fab"
-        android:src="@drawable/ic_add"
-        android:tint="@android:color/white"
-        android:elevation="8dp"
-        android:contentDescription="@string/add_city" />
+        android:contentDescription="@string/add"
+        app:srcCompat="@drawable/ic_add"
+        app:tint="@android:color/white"
+        app:fabCustomSize="64dp"
+        app:backgroundTint="#55FFFFFF"
+        app:borderWidth="0dp"
+        app:elevation="10dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

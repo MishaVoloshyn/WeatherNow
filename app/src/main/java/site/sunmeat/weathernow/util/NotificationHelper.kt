@@ -15,23 +15,21 @@ object NotificationHelper {
 
     private const val CHANNEL_ID = "weather_updates"
     private const val CHANNEL_NAME = "Weather updates"
-    private const val CHANNEL_DESC = "Notifications about updated weather data"
+
+    private const val NOTIF_ID = 7777
 
     fun ensureChannel(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channel = NotificationChannel(
             CHANNEL_ID,
             CHANNEL_NAME,
             NotificationManager.IMPORTANCE_DEFAULT
-        ).apply {
-            description = CHANNEL_DESC
-        }
+        )
         manager.createNotificationChannel(channel)
     }
 
-    fun showWeatherUpdated(
+    fun showTestNotification(
         context: Context,
         city: String,
         lat: Double,
@@ -41,7 +39,6 @@ object NotificationHelper {
     ) {
         ensureChannel(context)
 
-        // PendingIntent -> открыть ForecastActivity
         val intent = Intent(context, ForecastActivity::class.java).apply {
             putExtra(ForecastActivity.EXTRA_CITY_NAME, city)
             putExtra(ForecastActivity.EXTRA_LAT, lat)
@@ -53,22 +50,16 @@ object NotificationHelper {
         else
             PendingIntent.FLAG_UPDATE_CURRENT
 
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            1001,
-            intent,
-            flags
-        )
+        val pendingIntent = PendingIntent.getActivity(context, 777, intent, flags)
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_weather_cloud) // ✅ поставь свою маленькую иконку
-            .setContentTitle("Weather updated: $city")
-            .setContentText("$tempText • $descText")
-            .setStyle(NotificationCompat.BigTextStyle().bigText("$city: $tempText • $descText"))
+            .setSmallIcon(R.drawable.ic_weather_cloud)
+            .setContentTitle("WeatherNow: $city")
+            .setContentText("$tempText • $descText (tap to open)")
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .build()
 
-        NotificationManagerCompat.from(context).notify(2001, notification)
+        NotificationManagerCompat.from(context).notify(NOTIF_ID, notification)
     }
 }

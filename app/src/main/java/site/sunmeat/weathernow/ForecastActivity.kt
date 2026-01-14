@@ -1,10 +1,15 @@
 package site.sunmeat.weathernow
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
@@ -45,6 +50,7 @@ class ForecastActivity : AppCompatActivity() {
         binding = ActivityForecastBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Toolbar
         setSupportActionBar(binding.toolbarForecast)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
@@ -60,32 +66,57 @@ class ForecastActivity : AppCompatActivity() {
             override fun handleOnBackPressed() = finishWithResult()
         })
 
-        // Hourly
+        // списки
         binding.rvHourly.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvHourly.adapter = hourlyAdapter
 
-        // Days (vertical)
         binding.rvDays.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.rvDays.adapter = daysAdapter
 
+        // intent data
         lastCityName = intent.getStringExtra(EXTRA_CITY_NAME) ?: "City"
         lastLat = intent.getDoubleExtra(EXTRA_LAT, Double.NaN)
         lastLon = intent.getDoubleExtra(EXTRA_LON, Double.NaN)
-
         binding.tvToolbarCity.text = lastCityName
 
         // Switch °C/°F
         binding.swUnits.isChecked = isFahrenheit()
         binding.swUnits.setOnCheckedChangeListener { _, isChecked ->
             setFahrenheit(isChecked)
-            lastData?.let { applyForecast(it, showNotification = false) }
+            lastData?.let { applyForecast(it) }
+        }
+
+        // ✅ Разрешение на уведомления (Android 13+)
+        requestNotificationsPermissionIfNeeded()
+
+        // ✅ Кнопка для показа уведомления
+        binding.btnTestNotification.setOnClickListener {
+            if (!canPostNotifications()) {
+                Toast.makeText(this, "Allow notifications first", Toast.LENGTH_SHORT).show()
+                requestNotificationsPermissionIfNeeded()
+                return@setOnClickListener
+            }
+
+            // если прогноз уже загружен — используем реальные данные
+            val temp = if (lastTempText != "--°") lastTempText else "-4°"
+            val desc = if (lastDescText != "—") lastDescText else "Cloudy"
+
+            NotificationHelper.showTestNotification(
+                context = this,
+                city = lastCityName,
+                lat = if (!lastLat.isNaN()) lastLat else 46.4825,
+                lon = if (!lastLon.isNaN()) lastLon else 30.7233,
+                tempText = temp,
+                descText = desc
+            )
+
+            Toast.makeText(this, "Notification sent", Toast.LENGTH_SHORT).show()
         }
 
         if (lastLat.isNaN() || lastLon.isNaN()) {
             Toast.makeText(this, getString(R.string.no_coordinates), Toast.LENGTH_SHORT).show()
-            finish()
             return
         }
 
@@ -101,7 +132,7 @@ class ForecastActivity : AppCompatActivity() {
                 val response = ApiClient.weatherApi.getForecast(lat, lon)
                 withContext(Dispatchers.Main) {
                     lastData = response
-                    applyForecast(response, showNotification = true) // ✅ уведомление после загрузки
+                    applyForecast(response)
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -116,15 +147,13 @@ class ForecastActivity : AppCompatActivity() {
         }
     }
 
-    private fun applyForecast(data: ForecastResponse, showNotification: Boolean) {
+    private fun applyForecast(data: ForecastResponse) {
         lastData = data
 
-        // Current temp
         val currentTempC = data.current?.temperature
         lastTempText = currentTempC?.let { formatTemp(it) } ?: "--°"
         binding.tvBigTemp.text = lastTempText
 
-        // Today
         val daily = data.daily
         val codeToday = daily?.weatherCode?.firstOrNull()
         lastDescText = WeatherCodeMapper.toText(codeToday)
@@ -140,7 +169,6 @@ class ForecastActivity : AppCompatActivity() {
                 "H:--°  L:--°"
             }
 
-        // Hourly
         hourlyAdapter.submit(
             buildHourlyList(
                 time = data.hourly?.time,
@@ -149,7 +177,6 @@ class ForecastActivity : AppCompatActivity() {
             )
         )
 
-        // Days
         daysAdapter.submit(
             buildDaysList(
                 time = daily?.time,
@@ -160,18 +187,6 @@ class ForecastActivity : AppCompatActivity() {
         )
 
         binding.tvExtra.text = getString(R.string.data_source)
-
-        // ✅ Notification (PendingIntent opens this screen)
-        if (showNotification) {
-            NotificationHelper.showWeatherUpdated(
-                context = this,
-                city = lastCityName,
-                lat = lastLat,
-                lon = lastLon,
-                tempText = lastTempText,
-                descText = lastDescText
-            )
-        }
     }
 
     private fun buildHourlyList(
@@ -259,6 +274,24 @@ class ForecastActivity : AppCompatActivity() {
         finish()
     }
 
+    // ===== Notifications permission (Android 13+) =====
+
+    private fun canPostNotifications(): Boolean {
+        if (Build.VERSION.SDK_INT < 33) return true
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestNotificationsPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < 33) return
+        if (canPostNotifications()) return
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+            REQ_NOTIF
+        )
+    }
+
     companion object {
         const val EXTRA_CITY_NAME = "extra_city_name"
         const val EXTRA_LAT = "extra_lat"
@@ -270,5 +303,7 @@ class ForecastActivity : AppCompatActivity() {
 
         private const val PREFS_UNITS = "prefs_units"
         private const val KEY_USE_F = "use_fahrenheit"
+
+        private const val REQ_NOTIF = 5001
     }
 }
